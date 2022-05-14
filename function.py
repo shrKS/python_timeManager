@@ -6,7 +6,6 @@ import tkinter.ttk as tkk
 from tkinter import messagebox as tkMessageBox
 from tkinter import filedialog as tkFileDialog
 import config
-import func
 import stopWatch
 
 class Application(tk.Frame):

@@ -93,7 +93,7 @@ class Application(tk.Frame):
         #tupleで指定
         values = ('test', 'test2')
         # newWindow = self.createWindow("select title")
-        combobox = tkk.Combobox(self.master, values=values)
+        combobox = tkk.Combobox(self.pw_left, values=values)
         #イベントと紐付ける
         combobox.bind('<<ComboboxSelected>>', showSelected)
 
@@ -107,10 +107,10 @@ class Application(tk.Frame):
         
         pw_main = tk.PanedWindow(self.master, orient='horizontal')
         pw_main.pack(expand=True, fill = tk.BOTH, side="left")
-        pw_left = tk.PanedWindow(pw_main, bg="white", orient='vertical')
-        pw_main.add(pw_left)
+        self.pw_left = tk.PanedWindow(pw_main, bg="white", orient='vertical')
+        pw_main.add(self.pw_left)
         self.pw_right = tk.PanedWindow(pw_main, bg="yellow", orient='vertical')
-        pw_main.add(pw_right)
+        pw_main.add(self.pw_right)
         # fm_select = tk.Frame(pw_left, bd=2, relief="ridge")
         # pw_left.add(fm_select)
 
@@ -119,11 +119,11 @@ class Application(tk.Frame):
 
         self.setTitleBar()
 
-        timeStart_button = tk.Button(self.master, text='start', width=8, command = lambda:self.timeStart_func(timeStart_button, timeEnd_button))
-        timeEnd_button = tk.Button(self.master, text='stop', width=8, command = lambda:self.timeEnd_func(timeStart_button, timeEnd_button))
+        timeStart_button = tk.Button(self.pw_left, text='start', width=8, command = lambda:self.timeStart_func(timeStart_button, timeEnd_button))
+        timeEnd_button = tk.Button(self.pw_left, text='stop', width=8, command = lambda:self.timeEnd_func(timeStart_button, timeEnd_button))
         
-        popupWindow_button = tk.Button(self.master, text='create new window', width=8, command=self.createWindow)
-        changeTitle_button = tk.Button(self.master, text='change title', width=8, command=self.changeTitle)
+        popupWindow_button = tk.Button(self.pw_left, text='create new window', width=8, command=self.createWindow)
+        changeTitle_button = tk.Button(self.pw_left, text='change title', width=8, command=self.changeTitle)
 
         #create butten on GUI 
         timeStart_button.pack(side=tk.TOP, padx=(10,10))

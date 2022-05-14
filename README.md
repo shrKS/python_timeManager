@@ -1,0 +1,5 @@
+#Python Time Manager
+
+Tkinterの練習用に作成した時間管理ツール
+main.pyと同じディレクトリに*.xlsxファイルを置くことで
+ローカルでタスクや勤怠の時間管理を行う

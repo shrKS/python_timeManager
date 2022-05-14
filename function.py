@@ -6,7 +6,7 @@ import tkinter.ttk as tkk
 from tkinter import messagebox as tkMessageBox
 from tkinter import filedialog as tkFileDialog
 import config
-import function
+import func
 import stopWatch
 
 class Application(tk.Frame):
@@ -32,20 +32,20 @@ class Application(tk.Frame):
         fileType = [("", "*xlsx")]
         iDir = os.path.abspath(os.path.dirname('__file__'))
         filename = tkFileDialog.askopenfile(filetypes=fileType, initialdir=iDir).name
-        function.testCommand(filename)
+        func.testCommand(filename)
 
         #change mode
         ts_button["state"] = tk.DISABLED
         te_button["state"] = tk.NORMAL
 
     def timeStart_func(self, ts_button, te_button):
-        function.timeStart(self.watch)
+        func.timeStart(self.watch)
         #change mode
         ts_button["state"] = tk.DISABLED
         te_button["state"] = tk.NORMAL
 
     def timeEnd_func(self, ts_button, te_button):
-        function.timeStop(self.watch)
+        func.timeStop(self.watch)
         #change mode
         ts_button["state"] = tk.NORMAL
         te_button["state"] = tk.DISABLED

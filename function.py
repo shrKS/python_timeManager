@@ -1,143 +1,69 @@
-from re import A
-import sys
-import os
-import tkinter as tk
-import tkinter.ttk as tkk
-from tkinter import messagebox as tkMessageBox
-from tkinter import filedialog as tkFileDialog
-import config
+import pandas as pd
+import openpyxl
+from datetime import datetime as datetime
 import stopWatch
 
-class Application(tk.Frame):
-    def __init__(self, master=None):
-        self.DEBUG_LOG = True
-        super().__init__(master)
-        self.pack()
-        self.create_widgets()
-        self.master=master
+def testCommand(filename):
+    print(filename)
+    input_book = pd.ExcelFile(filename)
+    input_sheet_name = input_book.sheet_names
+    print(input_sheet_name)
+    
+def searchEmptyRow(sheet, indexCol):
+    #excel index is start at 1
+    row=1
+    while not sheet.cell(row,indexCol).value is None:
+        row+=1
+    return row
+
+def inputTime(sheet, row, indexCol):
+    now_time = datetime.now()
+    sheet.cell(row, indexCol, value=row-1)
+    sheet.cell(row, indexCol+1, value=now_time)
+    hours = "{}:{}".format(now_time.hour, now_time.minute)
+    sheet.cell(row, indexCol+2, value=hours)
+
+def inputData(filename):
+    wb = openpyxl.load_workbook(filename)
+    sheet = wb['timeManageData']
+    print(sheet.cell(1,1).value)
+    row = searchEmptyRow(sheet, indexCol=1)
+    print(row)
+    inputTime(sheet, row, indexCol=1)
+    wb.save(filename)
+
+def outputTime(sheet, row, indexCol):
+    now_time = datetime.now()
+    sheet.cell(row, indexCol+3, value=now_time)
+    time_diff = sheet.cell(row, indexCol+3).value - sheet.cell(row, indexCol+1).value
+    sheet.cell(row, indexCol+4, value=time_diff)
+    
 
 
-        #excel as DB
-        self.wb = config.WB
-        self.db_sheet = config.DB_SHEET
-        self.watch = stopWatch.stopWatch(self.wb, self.db_sheet)
-        
-
-        #add command
-        # self.test_func()
-
-    def test_func(self, ts_button, te_button):
-        print("this is test function")
-        fileType = [("", "*xlsx")]
-        iDir = os.path.abspath(os.path.dirname('__file__'))
-        filename = tkFileDialog.askopenfile(filetypes=fileType, initialdir=iDir).name
-        func.testCommand(filename)
-
-        #change mode
-        ts_button["state"] = tk.DISABLED
-        te_button["state"] = tk.NORMAL
-
-    def timeStart_func(self, ts_button, te_button):
-        func.timeStart(self.watch)
-        #change mode
-        ts_button["state"] = tk.DISABLED
-        te_button["state"] = tk.NORMAL
-
-    def timeEnd_func(self, ts_button, te_button):
-        func.timeStop(self.watch)
-        #change mode
-        ts_button["state"] = tk.NORMAL
-        te_button["state"] = tk.DISABLED
-
-    def createWindow(self):
-        self.newWindow = tk.Toplevel(self.master)
-        newLabel = tk.Label(self.newWindow, text='new window')
-        newButton = tk.Button(self.newWindow, text='new window button')
-
-        newLabel.pack()
-        newButton.pack()
-
-    def createWindow(self, label_title):
-        newWindow = tk.Toplevel(self.master)
-        newLabel = tk.Label(newWindow, text=label_title)
-        # newButton = tk.Button(self.newWindow, text='new window button')
-
-        newLabel.pack()
-        return newWindow
-        # newButton.pack()
+def outputData(filename):
+    wb = openpyxl.load_workbook(filename)
+    sheet = wb['timeManageData']
+    row = searchEmptyRow(sheet, indexCol=1) -1
+    outputTime(sheet, row, indexCol=1)
+    wb.save(filename)
 
 
 
-    def changeTitle(self):
-        def showSelected(event):
-            print(combobox.get())
-            config.TITLE = combobox.get()
-            # newWindow.destroy()
-        #tupleで指定
-        values = ('test', 'test2')
-        # newWindow = self.createWindow("select title")
-        combobox = tkk.Combobox(self.master, values=values)
-        #イベントと紐付ける
-        combobox.bind('<<ComboboxSelected>>', showSelected)
+def timeStart(watch):
+    watch.start()
 
-        combobox.pack()
+def timeStop(watch):
+     watch.stop()
 
-        #決定ボタンが必要
-
-    def setTitleBar(self):
-        def showSelected(event):
-            print(combobox.get())
-            config.TITLE = combobox.get()
-            # newWindow.destroy()
-        #tupleで指定
-        values = ('test', 'test2')
-        # newWindow = self.createWindow("select title")
-        combobox = tkk.Combobox(self.master, values=values)
-        #イベントと紐付ける
-        combobox.bind('<<ComboboxSelected>>', showSelected)
-
-        combobox.pack()
-        
-
-
-
-    def create_widgets(self):
-        print('DEBUG:----{}----'.format(sys._getframe().f_code.co_name)) if self.DEBUG_LOG else ""
-        
-        pw_main = tk.PanedWindow(self.master, orient='horizontal')
-        pw_main.pack(expand=True, fill = tk.BOTH, side="left")
-        pw_left = tk.PanedWindow(pw_main, bg="white", orient='vertical')
-        pw_main.add(pw_left)
-        self.pw_right = tk.PanedWindow(pw_main, bg="yellow", orient='vertical')
-        pw_main.add(pw_right)
-        # fm_select = tk.Frame(pw_left, bd=2, relief="ridge")
-        # pw_left.add(fm_select)
-
-        # main_pane = tk.PanedWindow(self.master, orient='horizontal')
-        # main_pane.pack(expand=True, fill=tk.BOTH, side="left")
-
-        self.setTitleBar()
-
-        timeStart_button = tk.Button(self.master, text='start', width=8, command = lambda:self.timeStart_func(timeStart_button, timeEnd_button))
-        timeEnd_button = tk.Button(self.master, text='stop', width=8, command = lambda:self.timeEnd_func(timeStart_button, timeEnd_button))
-        
-        popupWindow_button = tk.Button(self.master, text='create new window', width=8, command=self.createWindow)
-        changeTitle_button = tk.Button(self.master, text='change title', width=8, command=self.changeTitle)
-
-        #create butten on GUI 
-        timeStart_button.pack(side=tk.TOP, padx=(10,10))
-        timeEnd_button.pack(side=tk.BOTTOM, padx=(10,10))
-        popupWindow_button.pack(side=tk.LEFT)
-        changeTitle_button.pack(side=tk.RIGHT)
-
-        # btn_test_func = tk.Button()
-
-
+    
 
 if __name__ == '__main__':
-    root = tk.Tk()
-    myApp = Application(master=root)
-    myApp.master.title('my test application') #set title
-    myApp.master.geometry("{}x{}".format(config.WINDOW_WIDTH, config.WINDOW_HEGHT)) #set width * height
+    print("package")
 
-    myApp.mainloop()
+
+#メモ
+
+#タイトルの追加や表示の設定(クラス?)
+#groupbyしてグラフ表示(棒グラフ，チャート)
+#休憩時間の開始と終了の追加
+#6つの枠で画面を満たす

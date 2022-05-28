@@ -1,6 +1,7 @@
 import openpyxl
 from datetime import datetime
 import config
+import timerDB
 
 class stopWatch:
     def __init__(self, wb, sheet):
@@ -8,6 +9,7 @@ class stopWatch:
         self.sheet = sheet
         self.columns = config.COLUMNS
         self.setTitle("test")
+        self.DB = config.TIMERDB
     
     def setTitle(self, title):
         self.title = title
@@ -18,7 +20,8 @@ class stopWatch:
     def stop(self):
         self.e_time = datetime.now()
         self.calcDiff()
-        self.record()
+        # self.record()
+        self.recordSql(self.DB)
         self.resetTime()
 
     def calcDiff(self):
@@ -42,6 +45,12 @@ class stopWatch:
 
         #save
         self.wb.save(config.EXCEL_PATH)
+
+    def recordSql(self, DB):
+        values = (self.title, self.s_time, self.e_time, self.diff_time)
+        DB.insert(*values)
+
+
 
 
     def searchEmptyRow(self):

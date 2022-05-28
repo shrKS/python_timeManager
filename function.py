@@ -16,36 +16,36 @@ def searchEmptyRow(sheet, indexCol):
         row+=1
     return row
 
-def inputTime(sheet, row, indexCol):
-    now_time = datetime.now()
-    sheet.cell(row, indexCol, value=row-1)
-    sheet.cell(row, indexCol+1, value=now_time)
-    hours = "{}:{}".format(now_time.hour, now_time.minute)
-    sheet.cell(row, indexCol+2, value=hours)
+# def inputTime(sheet, row, indexCol):
+#     now_time = datetime.now()
+#     sheet.cell(row, indexCol, value=row-1)
+#     sheet.cell(row, indexCol+1, value=now_time)
+#     hours = "{}:{}".format(now_time.hour, now_time.minute)
+#     sheet.cell(row, indexCol+2, value=hours)
 
-def inputData(filename):
-    wb = openpyxl.load_workbook(filename)
-    sheet = wb['timeManageData']
-    print(sheet.cell(1,1).value)
-    row = searchEmptyRow(sheet, indexCol=1)
-    print(row)
-    inputTime(sheet, row, indexCol=1)
-    wb.save(filename)
+# def inputData(filename):
+#     wb = openpyxl.load_workbook(filename)
+#     sheet = wb['timeManageData']
+#     print(sheet.cell(1,1).value)
+#     row = searchEmptyRow(sheet, indexCol=1)
+#     print(row)
+#     inputTime(sheet, row, indexCol=1)
+#     wb.save(filename)
 
-def outputTime(sheet, row, indexCol):
-    now_time = datetime.now()
-    sheet.cell(row, indexCol+3, value=now_time)
-    time_diff = sheet.cell(row, indexCol+3).value - sheet.cell(row, indexCol+1).value
-    sheet.cell(row, indexCol+4, value=time_diff)
+# def outputTime(sheet, row, indexCol):
+#     now_time = datetime.now()
+#     sheet.cell(row, indexCol+3, value=now_time)
+#     time_diff = sheet.cell(row, indexCol+3).value - sheet.cell(row, indexCol+1).value
+#     sheet.cell(row, indexCol+4, value=time_diff)
     
 
 
-def outputData(filename):
-    wb = openpyxl.load_workbook(filename)
-    sheet = wb['timeManageData']
-    row = searchEmptyRow(sheet, indexCol=1) -1
-    outputTime(sheet, row, indexCol=1)
-    wb.save(filename)
+# def outputData(filename):
+#     wb = openpyxl.load_workbook(filename)
+#     sheet = wb['timeManageData']
+#     row = searchEmptyRow(sheet, indexCol=1) -1
+#     outputTime(sheet, row, indexCol=1)
+#     wb.save(filename)
 
 
 

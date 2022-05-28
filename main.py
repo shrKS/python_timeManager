@@ -126,10 +126,12 @@ class Application(tk.Frame):
         changeTitle_button = tk.Button(self.pw_left, text='change title', width=8, command=self.changeTitle)
 
         #create butten on GUI 
-        timeStart_button.pack(side=tk.TOP, padx=(10,10))
-        timeEnd_button.pack(side=tk.BOTTOM, padx=(10,10))
+        timeStart_button.pack(side='left', padx=(10,10), fill='x')
+        timeEnd_button.pack(side='left', padx=(10,10), fill='x')
         popupWindow_button.pack(side=tk.LEFT)
         changeTitle_button.pack(side=tk.RIGHT)
+
+
 
         # btn_test_func = tk.Button()
 
